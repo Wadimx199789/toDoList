@@ -1,45 +1,56 @@
-const list = {}
-function addTask(task) {
-    list[task] = "To Do";
+let list = [];
+let id = 0;
+
+function addPost(post,priority){
+    id+=1;
+    let obj = {};
+    obj.id = id;
+    obj.name = post;
+    obj.status = "To Do";
+    obj.priority = priority;
+    list.push(obj);
 }
-function showList() {
-    let ToDo = [];
-    let InProgress = [];
-    let Done = [];
-    sortTasks(ToDo,InProgress,Done);
-    let resultString = "ToDo: "+ ToDo.join(",") +"\n "+ "Done :"+Done.join(",")+"\n " + "In Progress:" + InProgress.join(",");
-    console.log(resultString);
-}
-function deleteTask(task) {
-    delete list[task];
-}
-function changeStatus(taskName, status) {
-    list[taskName] = status;
-}
-function sortTasks(toDo,inProgress,done){
-    for(key in list){
-        if(list[key]==="To Do"){
-            toDo.push(key);
+
+function showByPriority(){
+    let high =[];
+    let low = [];
+
+    list.forEach((item)=>{
+        if(item.priority==='high'){
+            high.push(item.name);
         }
-        else if(list[key]==="Done"){
-            done.push(key);
+        else if(item.priority==='low'){
+            low.push(item.name);
         }
-        else if(list[key]==="In Progress"){
-            inProgress.push(key);
-        }
-    }
-    if (inProgress.length == 0) {
-        inProgress.push('-');
-      }
-      if (done.length == 0) {
-        done.push('-');
-      }
-      if (toDo.length == 0) {
-        toDo.push('-');
-      }
-    
+    });
+    let result = "high: "+ high.join(",") +"\n "+ "low :"+low.join(",")+"\n ";
+    console.log(result);
+
 }
-addTask("сходить в магазин");
-addTask("забрать брата");
-changeStatus("сходить в магазин","Done");
-showList();
+function deletePost(post){
+    id-=1;
+    list = list.filter(item=>item.name!==post);
+}
+
+function changeStatus(post,status){
+    list = list.map(function(item){
+        if(item.name===post){
+            item.status=status;
+        }
+        return item;
+    })
+}
+function changePriority(post,prioryty){
+    list = list.map(function(item){
+        if(item.name===post){
+            item.priority=prioryty;
+        }
+        return item;
+    })
+}
+
+addPost("сделать покушать",'high');
+changeStatus("сделать покушать","Done");
+changePriority("сделать покушать","low");
+showByPriority();
+
